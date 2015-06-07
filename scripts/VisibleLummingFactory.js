@@ -8,7 +8,7 @@ define(['LummingFactory', 'ColorEnum', 'VisionEnum', 'DoorsFactory', 'FilterFact
         this.color = color;
         this.spriteName = 'lumming_' + ColorEnum.getName(color);
         LummingFactory.Lumming.call(this, game, this.spriteName, x, y, vitesseX, _vision);
-        this.animations.add('kill', [1, 4, 15, 11, 1], 10, true);
+        this.animations.add('kill', [1, 4, 15, 11], 10, true);
 
     }
 
@@ -20,19 +20,22 @@ define(['LummingFactory', 'ColorEnum', 'VisionEnum', 'DoorsFactory', 'FilterFact
         if (this.color == door.color){
           this.body.velocity.x = 0;
           this.animations.play('kill');
-          this.kill();
+          this.color = null;
+          //this.kill(); géré dans l'update maintenant
           return 1;
         }
         return 0;
     }
 
     VisibleLumming.prototype.collideWithFilter = function(filter) {
+      if (this.color != null){
         var temp = this.color;
         var value = ColorEnum.getValue(temp);
         if (filter.isAdditive()) {
             value = value | ColorEnum.getValue(filter.getColor());
             this.color = ColorEnum.getColorKnowingValue(value);
         } else {
+        //  alert(ColorEnum.getValue(filter.getColor()));
             value = value & ColorEnum.getValue(filter.getColor());
             this.color = ColorEnum.getColorKnowingValue(value);
 
@@ -46,6 +49,7 @@ define(['LummingFactory', 'ColorEnum', 'VisionEnum', 'DoorsFactory', 'FilterFact
                 LummingFactory.Lumming.prototype.updateColor.call(this, 'lumming_' + ColorEnum.getName(this.color));
             }
         }
+      }
     }
 
     VisibleLumming.prototype.update = function() {

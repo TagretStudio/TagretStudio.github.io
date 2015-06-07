@@ -16,7 +16,9 @@ define(['Images', 'LummingFactory', 'VisibleLummingFactory', 'ColorEnum', 'Music
 	var _level2 = {
 
 		preload : function(){
-			_music = MusicFactory.create('level1', 'media/audio/Level 1.ogg');
+			_music = MusicFactory.create('level2', 'media/audio/level.ogg');
+			_game.load.image('cliquez', 'media/img/cliquezPourCommencer.png');
+			_game.load.spritesheet('platforms', 'media/img/tiles3.png',32,32);
 			VisibleLummingFactory.init(_game);
 			PlatformFactory.init(_game);
 			DoorsFactory.init(_game);
@@ -37,8 +39,8 @@ define(['Images', 'LummingFactory', 'VisibleLummingFactory', 'ColorEnum', 'Music
 				platform2 = PlatformFactory.create(100, 200, false);
 				platform3 = PlatformFactory.create(400, 300, false);
 				platform4 = PlatformFactory.create(700, 280, false);
-			  platform5 = PlatformFactory.create(0, 504, false);
-			  platform6 = PlatformFactory.create(400, 504, false);
+				platform5 = PlatformFactory.create(0, 504, false);
+				platform6 = PlatformFactory.create(400, 504, false);
 			}
 			_groupPlatforms.add(platform1);
 			_groupPlatforms.add(platform2);
@@ -47,6 +49,8 @@ define(['Images', 'LummingFactory', 'VisibleLummingFactory', 'ColorEnum', 'Music
 		    _groupPlatforms.add(platform5);
 		    _groupPlatforms.add(platform6);
 
+			platform(0,0,4,300);
+			platform(0,64,4,500);
 
 
 			_groupDoors = _game.add.group();
@@ -73,8 +77,12 @@ define(['Images', 'LummingFactory', 'VisibleLummingFactory', 'ColorEnum', 'Music
 			_menuNiveau = MenuFactoryTest.create();
 			ItemsLevel.reinit(_game);
 
-			_game.startText = _game.add.text(0, 450, 'cliquez pour commencer', { fontSize: '32px', fill: '#000' });
-			_game.input.onDown.add(function () {if(_game.paused) {_game.paused = false;_game.startText.text = '';}},_game);
+			// _game.startText = _game.add.text(0, 450, 'cliquez pour commencer', { fontSize: '32px', fill: '#000' });
+			// _game.input.onDown.add(function () {if(_game.paused) {_game.paused = false;_game.startText.text = '';}},_game);
+			var cliquez = this.add.sprite(100, 300, 'cliquez');
+			cliquez.scale.set(0.7, 0.7);
+			_game.input.onDown.add(function () {if(_game.paused) {_game.paused = false;cliquez.destroy();;}},_game);
+
 			_game.paused = true;
 
 
@@ -103,11 +111,33 @@ define(['Images', 'LummingFactory', 'VisibleLummingFactory', 'ColorEnum', 'Music
 
 	}
 
+	function platform(x, y, h, w) {
+		var dummy = _game.add.sprite(0,0,'platforms',1);
+		var sw = dummy.width;
+		dummy.kill();
+		var p;
+		for (var i=0; i< Math.floor(Math.floor(w/sw)/2)+1; i++) {
+			p = _game.add.sprite(x + w/2 - i*sw, y,'platforms',6);
+			p.anchor.set(0,0);
+			p = _game.add.sprite(x + w/2 + i*sw, y,'platforms',6);
+			p.anchor.set(1,0);
+		}
+		p = _game.add.sprite(x,y,'platforms',4);
+		p = _game.add.sprite(x+w,y,'platforms',2);
+		p.anchor.set(1,0);
+	}
+
 	function mayExit(lum, door){
-		var exit = lum.collideWithDoor(door);
-		if (exit == 1){
-			_nbLummingsSaved = _nbLummingsSaved +1;
-			text.setText( _nbLummingsSaved + '/'+ _nbLummingsV);
+		var lx = (lum.left+lum.right)/2;
+		var dl = door.left;
+		var dr = door.right;
+
+		if (lx>dl && lx<dr) {
+			var exit = lum.collideWithDoor(door);
+			if (exit == 1){
+				_nbLummingsSaved = _nbLummingsSaved +1;
+				text.setText( _nbLummingsSaved + '/'+ _nbLummingsV);
+			}
 		}
 	}
 

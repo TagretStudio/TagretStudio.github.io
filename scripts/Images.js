@@ -6,13 +6,13 @@ define (function(){
 	var _presents = null;
 
 	logo1 = function(){
-		_tagretLogo = _game.add.sprite(336, 236, 'cible');
+		_tagretLogo = _game.add.sprite(_game.world.centerX - 64, _game.world.centerY - 64, 'cible');
 	}
 	logo2 = function(){
-		_tagret = _game.add.sprite(336, 364, 'tagret');
+		_tagret = _game.add.sprite(_game.world.centerX - 64, _game.world.centerY + 64, 'tagret');
 	}
 	logo3 = function(){
-		_presents = _game.add.sprite(350, 416, 'presents');
+	    _presents = _game.add.sprite(_game.world.centerX - 48, _game.world.centerY + 116, 'presents');
 	}
 	var  _backgroundIntro = {
 		preload : function(){
@@ -24,16 +24,19 @@ define (function(){
 			_game.load.spritesheet('button', 'media/img/MenuButtons.png', 274, 71);
 
 		},
-		create : function(){
+		crea : function(){
 			_background = _game.add.sprite(0, 0, 'preloaderBackground');
-			_background.scale.set(1024/800, 768/600);
-
-		},
-		update : function(){
-			_game.time.events.add(50, logo1, _game);
+			_background.scale.set(1024/_game.world.width, 768/_game.world.height);
+		    _game.time.events.add(50, logo1, _game);
 			_game.time.events.add(800, logo2, _game);
 			_game.time.events.add(1500, logo3, _game);
-		}
+
+		},
+	    create : function(){
+		_background = _game.add.sprite(0, 0, 'preloaderBackground');
+		_background.scale.set(1024/_game.world.width, 768/_game.world.height);
+
+	    },
 	}
 
 

@@ -29,23 +29,43 @@ define(['VisionEnum'], function(VisionEnum) {
 
 
 	Lumming.prototype.update = function() {
-		if (VisionEnum.getVisionCurrent() == this.defaultVision) {
-			if (this.body.velocity.x > 0) {
-				this.animations.play('right');
-			} else {
-				this.animations.play('left');
+		if (this.color == null) { //vaut null si on est en train de sortir d'une porte ou si on est en train de mourir
+			this.alpha -= 0.01;
+			if (this.alpha <= 0) {
+				this.kill();
 			}
 		} else {
-			if (this.body.velocity.x > 0) {
-				this.animations.play('right_invisible');
+			if (VisionEnum.getVisionCurrent() == this.defaultVision) {
+				if (this.body.velocity.x > 0) {
+					this.animations.play('right');
+				} else {
+					this.animations.play('left');
+				}
 			} else {
-				this.animations.play('left_invisible');
+				if (this.body.velocity.x > 0) {
+					this.animations.play('right_invisible');
+				} else {
+					this.animations.play('left_invisible');
+				}
+			}
+			if (this.position.y > _game.world.height - 96) {
+				this.body.velocity.x = 0;
+				this.body.velocity.y = -100;
+				this.body.gravity.y = -100;
+				this.animations.play('kill');
+				this.color = null;
+				//this.kill();
 			}
 		}
-	    if (this.position.y > 504) {
-			this.kill();
-	    }
 	}
+
+	Lumming.prototype.collideWithDoor = function(door){
+
+			return 0;
+	}
+
+    Lumming.prototype.collideWithFilter = function(filter) {
+    }
 
 	Lumming.prototype.updateColor = function(spriteName) {
 		this.loadTexture(spriteName);
@@ -55,10 +75,19 @@ define(['VisionEnum'], function(VisionEnum) {
 		game.physics.arcade.collide(this, objet);
 	}
 
+	Lumming.prototype.collideWithMiroir = function(game, objet) {
+		if (this.key != 'lumming_gamma'){
+			this.body.bounce.y = 1.5;
+			game.physics.arcade.collide(this, objet);
+			this.body.bounce.y = 0;
+		}
+
+	}
+
+
 	return{
 		init : function(game) {
 			_game = game;
-			_game.load.spritesheet('lumming_yellow', 'media/img/lumming_yellow.png', 32, 32, 32);
 		}
 		,
 		create : function(spriteName, x, y, vitesseX, vision) {

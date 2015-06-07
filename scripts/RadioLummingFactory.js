@@ -1,11 +1,12 @@
-define(['LummingFactory', 'VisionEnum'],
-	   function(LummingFactory, VisionEnum) {
+define(['LummingFactory', 'VisionEnum', 'ColorEnum'],
+	   function(LummingFactory, VisionEnum, ColorEnum) {
 
     var _game = null;
 	var _vision = null;
 
     var RadioLumming = function(game, x, y, vitesseX) {
 	this.sprite = 'media/img/lumming_radio';
+    this.color = ColorEnum.getColorEnum().RADIO;
 	LummingFactory.Lumming.call(this, game, 'lumming_radio', x, y, vitesseX, 1);
     }
 

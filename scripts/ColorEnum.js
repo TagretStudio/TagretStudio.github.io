@@ -91,7 +91,7 @@ define(function() {
 					return c;
 				}
 			}
-			return ColorEnum.BLUE; // A changer
+			return ColorEnum.BLACK; // N'est pas censé arriver
 		}
 	}
 

@@ -5,7 +5,7 @@
     var Platform = function(game, x, y, isPb) {
         this.isPb = isPb;
         if (isPb) {
-            this.spriteName = ''; //A CHANGER une fois qu'on aura un sprite pour le plomb
+            this.spriteName = 'platformPb'; //A CHANGER une fois qu'on aura un sprite pour le plomb
         } else {
             this.spriteName = 'platform';
         }
@@ -21,6 +21,7 @@
         init : function(game) {
             _game = game;
             _game.load.image('platform', 'media/img/platform.png');
+            _game.load.image('platformPb', 'media/img/platformPb.png');
 			
         },
         

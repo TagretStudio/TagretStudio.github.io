@@ -1,4 +1,4 @@
-define(['./Images', './Musiques', 'MusicFactory', 'Transition', 'MenuFactoryTest', 'ItemsLevel'], function(Images, Musiques, MusicFactory, Transition, MenuFactoryTest, ItemsLevel){
+define(['./Images', 'MusicFactory', 'Transition', 'MenuFactoryTest', 'ItemsLevel'], function(Images, MusicFactory, Transition, MenuFactoryTest, ItemsLevel){
 	var _game = null;
 	var _etapesuivante = null;
 
@@ -6,7 +6,7 @@ define(['./Images', './Musiques', 'MusicFactory', 'Transition', 'MenuFactoryTest
 
 		init : function(){
 			_game.scale.pageAlignHorizontally = true;
-
+ 
 
 		},
 
@@ -15,19 +15,21 @@ define(['./Images', './Musiques', 'MusicFactory', 'Transition', 'MenuFactoryTest
 			Images.boot().preload();
 			MusicFactory.init(_game);
 			Transition.init(_game);
-			Musiques.init(_game);
-			Musiques.getmaintheme().preload();
+			//Musiques.init(_game);
+			//Musiques.getmaintheme().preload();
 			MenuFactoryTest.init(_game);
 			ItemsLevel.init(_game);
-			
+
 		}
 				  ,
 				  create : function(){
-						Transition.nextState(_etapesuivante);
-					//  _game.state.start(_etapesuivante);
+
+					//	Transition.nextState(_etapesuivante);
+					  _game.state.start(_etapesuivante);
 				  }
 
 	}
+
 
 	return {
 		init : function(game, etapesuivante){

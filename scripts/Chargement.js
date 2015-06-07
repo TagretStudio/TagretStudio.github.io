@@ -5,9 +5,11 @@ define(['./Images', './MusicFactory' ,'./MainMenu', 'Transition'], function(Imag
 	var _music = null;
 
 
-	transition = function(){
-		Transition.nextState(_etapesuivante);
-	}
+		function transition(){
+		//	Transition.nextState(_etapesuivante);
+			_game.state.start(_etapesuivante); 
+
+		}
 
 	var _chargement = {
 		preload : function(){
@@ -19,14 +21,16 @@ define(['./Images', './MusicFactory' ,'./MainMenu', 'Transition'], function(Imag
 		create : function(){
 			_space = _game.input.keyboard.addKey(Phaser.Keyboard.SPACEBAR);
 			_music.play();
-			Images.boot().create();
+			Images.boot().crea();
 		},
 
 		update :function(){
-			Images.boot().update();
-			this.time.events.add(10800, transition, _game);
+			this.time.events.add(5000, function() {
+			    transition();
+			}, _game);
 			if (_space.isDown) {
-				transition();
+				_game.time.events.add(Phaser.Timer.SECOND * 2, transition, this);
+
 			}
 
 		}
