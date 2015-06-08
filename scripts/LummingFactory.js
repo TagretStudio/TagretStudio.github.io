@@ -12,10 +12,17 @@ define(['VisionEnum'], function(VisionEnum) {
 		this.body.gravity.y = 300;
 
 		this.body.velocity.x = vitesseX;
-		this.animations.add('left', [4, 5, 6, 7], 10, true);
-		this.animations.add('right',  [8, 9, 10, 11], 10, true);
-		this.animations.add('left_invisible', [20, 21, 22, 23], 10, true);
-		this.animations.add('right_invisible', [24, 25, 26, 27], 10, true);
+		if (vision == VisionEnum.getVisionEnum().INFRA) {
+			this.animSpeed = 6;
+		} else if (vision == VisionEnum.getVisionEnum().VISIBLE) {
+			this.animSpeed = 10;
+		} else {
+			this.animSpeed = 14;
+		}
+		this.animations.add('left', [4, 5, 6, 7], this.animSpeed, true);
+		this.animations.add('right',  [8, 9, 10, 11], this.animSpeed, true);
+		this.animations.add('left_invisible', [20, 21, 22, 23], this.animSpeed, true);
+		this.animations.add('right_invisible', [24, 25, 26, 27], this.animSpeed, true);
 		this.body.bounce.x = 1;
 		this.frame = 0;
 	}
@@ -38,13 +45,13 @@ define(['VisionEnum'], function(VisionEnum) {
 			if (VisionEnum.getVisionCurrent() == this.defaultVision) {
 				if (this.body.velocity.x > 0) {
 					this.animations.play('right');
-				} else {
+				} else if (this.body.velocity.x < 0) {
 					this.animations.play('left');
 				}
 			} else {
 				if (this.body.velocity.x > 0) {
 					this.animations.play('right_invisible');
-				} else {
+				} else if (this.body.velocity.x < 0) {
 					this.animations.play('left_invisible');
 				}
 			}

@@ -1,4 +1,4 @@
-define(['Images','MusicFactory', 'Transition'], function(Images, MusicFactory, Transition){
+define(['Images','MusicFactory', 'Transition', 'LevelSelection'], function(Images, MusicFactory, Transition, LevelSelection){
 	var _game = null;
 	var _etapesuivante = null;
 	var _pointLogo = null;
@@ -12,7 +12,8 @@ define(['Images','MusicFactory', 'Transition'], function(Images, MusicFactory, T
 
 	function actionPlay() {
 		_buttonPlay.kill();
-		Transition.nextState('Level1Demo', _music);
+		//Transition.nextState('Level1Demo', _music);
+		Transition.nextState('LevelSelection', null);
 	}
 
 	function actionCredits(){
@@ -66,6 +67,7 @@ define(['Images','MusicFactory', 'Transition'], function(Images, MusicFactory, T
 
 		setMusic : function(music){
 			_music = music ;
+			LevelSelection.setMusic(_music);
 		},
 
 		getMainMenu : function(){

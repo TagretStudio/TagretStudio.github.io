@@ -23,14 +23,23 @@ define(['Images', 'LummingFactory', 'VisibleLummingFactory', 'ColorEnum',
 	var _button_restart = null;
 	var _button_menu = null;
 	var _tabAvailableObjects = null;
-
+	var _dark = null;
+	       var _marque = false;
+	       var _marque_music = true;
+	       var ecranAide = null;
 	var LevelFactory = {
 
 		preload: function() {
+		    if (_marque_music) {
 			_music = MusicFactory.create('level1', 'media/audio/Level 1.ogg');
+		    } else {
+			_music = MusicFactory.create('level2', 'media/audio/level.ogg');
+		    }
 			_game.load.image('buttonDiamond', 'media/img/menuButton.png');
 			_game.load.image('buttonRefresh', 'media/img/refresh.png')
 			_game.load.image('cliquez', 'media/img/cliquezPourCommencer.png');
+		    _game.load.image('aide', 'media/img/aideColore.png');
+		    _game.load.image('aideScreen', 'media/img/ecranAide.png');
 			MenuFactoryTest.init(_game);
 			PlatformFactory.init(_game);
 			VisibleLummingFactory.init(_game);
@@ -51,6 +60,11 @@ define(['Images', 'LummingFactory', 'VisibleLummingFactory', 'ColorEnum',
 			_game.physics.startSystem(Phaser.Physics.ARCADE);
 			_currentVision = VisionEnum.getVisionEnum().VISIBLE;
 			VisionEnum.setVisionCurrent(_currentVision);
+
+			_dark = _game.add.sprite(0,0,'preloaderBackground');
+			_dark.tint = 0;
+			_dark.alpha = 0.5;
+
 			this.levelStruct = LevelStructure.create(_currentLevel);
 
 			_groupPlatforms = this.levelStruct.getPlatforms();
@@ -68,15 +82,17 @@ define(['Images', 'LummingFactory', 'VisibleLummingFactory', 'ColorEnum',
 			_nbLummingsV = this.levelStruct.getNbLummingsWin();
 			_tabAvailableObjects = this.levelStruct.getTabAvailableObjects();
 
-			if (_groupLum.total == 0) {
+			if (_nbLummingsV == 0) {
 				_currentLevel = 1;
 				_game.state.start('MainMenu');
 			} else {
-				text = _game.add.text(_game.world.width - 50, 0, _nbLummingsSaved+'/'+_nbLummingsV, {align: "center"});
+				text = _game.add.text(_game.world.width - 50, 0, _nbLummingsSaved+'/'+_nbLummingsV, {align: "center", fill: '#ffffff', stroke: '#000000', strokeThickness: 2});
 				text.anchor.set(1,0);
-				button_menu = _game.add.button(32,0, 'buttonDiamond', actionOnMenu, _game);
+				button_menu = _game.add.button(10,0, 'buttonDiamond', actionOnMenu, _game);
 				button_restart = _game.add.button(_game.world.width - 150,0,'buttonRefresh', actionOnRestart, _game);
-
+			    button_help = _game.add.button(90, 0, 'aide', actionOnHelp, _game);
+			    button_help.scale.set(64/148, 32/74);
+			    button_menu.scale.set(64/148, 32/74);
 				_menu = MenuFactoryTest.create(_tabAvailableObjects);
 				ItemsLevel.reinit(_game);
 				ItemsLevel.setgroup(_groupLum);
@@ -111,14 +127,27 @@ define(['Images', 'LummingFactory', 'VisibleLummingFactory', 'ColorEnum',
 				}
 			)
 
+			_dark.alphaTarget = 0.5 - 0.5 * _nbLummingsSaved/_nbLummingsV;
+			_dark.alpha += (_dark.alphaTarget-_dark.alpha)/8;
+
+		    if (_marque == true) {
+			_marque = false;
+			ecranAide.kill();
+			_game.input.onDown.add(function () {
+			    _game.paused = false;
+			},_game);
+		    }
+
 			if (_nbLummingsV == _nbLummingsSaved) {
 				if (!_alreadyChangeLevel) {
 					_game.time.events.add(Phaser.Timer.SECOND*1.8, function() {
-						if (_groupLum.total == 0) {
+						if (_nbLummingsV == 0) {
 							Transition.nextState('MainMenu', _music);
 						} else {
 							_currentLevel++;
-							Transition.nextState('LevelFactory', _music);
+						    _marque_music = !_marque_music;
+							Transition.nextState('LevelFactory', _music, _currentLevel);
+
 						}
 					});
 				}
@@ -142,7 +171,10 @@ define(['Images', 'LummingFactory', 'VisibleLummingFactory', 'ColorEnum',
 	}
 
 	function mayKill(lum1, lum2){
-		if(lum1.color == 10 && ((lum2.defaultVision == 2) || (lum2.defaultVision == 1))) {
+		if(lum1.color == 10 && lum1.body.velocity.x !=0 &&(((lum2.defaultVision == 2) || (lum2.defaultVision == 1)))) {
+
+			var old = lum1.body.velocity.x;
+			if (lum1.body.velocity.x < 0){}
 			lum2.body.velocity.x = 0;
 			lum2.body.velocity.y = -100;
 			lum2.body.gravity.y = -100;
@@ -150,9 +182,10 @@ define(['Images', 'LummingFactory', 'VisibleLummingFactory', 'ColorEnum',
 			lum2.color = null;
 			lum1.body.velocity.x = 0;
 			_game.time.events.add(Phaser.Timer.SECOND*0.75, function(){
-				lum1.body.velocity.x = 70;
-			    lum2.kill();
+			lum2.kill();
+			lum1.body.velocity.x = old;
 			}, this);
+
 			//lum2.kill();
 		}
 	}
@@ -216,6 +249,13 @@ define(['Images', 'LummingFactory', 'VisibleLummingFactory', 'ColorEnum',
 		}
 	}
 
+	       function actionOnHelp() {
+		   _game.paused = true;
+		   ecranAide = this.add.sprite(0, 0, 'aideScreen');
+		   ecranAide.scale.set(_game.world.width/786, _game.world.height/588);
+		   _marque = true;
+	       }
+
 	return {
 		init: function(game) {
 			_game = game;
@@ -223,6 +263,12 @@ define(['Images', 'LummingFactory', 'VisibleLummingFactory', 'ColorEnum',
 		},
 		getLevel: function() {
 			return LevelFactory;
+		},
+		setLevel : function(level){
+			_currentLevel = level;
+		},
+		getCurrentLevel : function(level){
+			return _currentLevel;
 		}
 	}
 

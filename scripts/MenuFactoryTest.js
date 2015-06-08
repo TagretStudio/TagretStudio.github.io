@@ -129,6 +129,12 @@ define(['VisionEnum','ColorEnum', 'DoorsFactory', 'ItemsLevel'], function(Vision
 					p.events.onDragStop.add(Menu.prototype.dragStop, this, p);
 					p.origX = p.x;
 					p.origY = p.y;
+
+					p.copy = dragcopy;
+					if (p.number == 0) {
+						p.alpha = 0.25;
+						dragcopy.alpha = 0;
+					}
 				}
 			}
 		)
@@ -153,6 +159,13 @@ define(['VisionEnum','ColorEnum', 'DoorsFactory', 'ItemsLevel'], function(Vision
 					p.events.onDragStop.add(Menu.prototype.dragStop, this, p);
 					p.origX = p.x;
 					p.origY = p.y;
+
+					p.copy = dragcopy;
+					p.copy = dragcopy;
+					if (p.number == 0) {
+						p.alpha = 0.25;
+						dragcopy.alpha = 0;
+					}
 				}
 			}
 		)
@@ -178,6 +191,13 @@ define(['VisionEnum','ColorEnum', 'DoorsFactory', 'ItemsLevel'], function(Vision
 					p.events.onDragStop.add(Menu.prototype.dragStop, this, p);
 					p.origX = p.x;
 					p.origY = p.y;
+
+					p.copy = dragcopy;
+					p.copy = dragcopy;
+					if (p.number == 0) {
+						p.alpha = 0.25;
+						dragcopy.alpha = 0;
+					}
 				}
 			}
 		)
@@ -203,6 +223,13 @@ define(['VisionEnum','ColorEnum', 'DoorsFactory', 'ItemsLevel'], function(Vision
 					p.events.onDragStop.add(Menu.prototype.dragStop, this, p);
 					p.origX = p.x;
 					p.origY = p.y;
+
+					p.copy = dragcopy;
+					p.copy = dragcopy;
+					if (p.number == 0) {
+						p.alpha = 0.25;
+						dragcopy.alpha = 0;
+					}
 				}
 			}
 		)
@@ -316,6 +343,14 @@ define(['VisionEnum','ColorEnum', 'DoorsFactory', 'ItemsLevel'], function(Vision
 			p.y += (_game.world.height - p.y)/4;
 			if (!p.draggable) p.spriteText.y = p.y+32;
 		}
+		if (!p.draggable) {
+            if (p.number == 0) {
+                p.alphaTarget = 0;
+				p.copy.alphaTarget = 0.25;
+				p.alpha += (p.alphaTarget-p.alpha)/8;
+				p.copy.alpha += (p.copy.alphaTarget-p.copy.alpha)/8;
+            }
+        }
 	}
 
 	Menu.prototype.toInfra = function(){

@@ -1,9 +1,9 @@
 define(['PlatformFactory', 'LummingFactory', 'VisibleLummingFactory', 'ColorEnum',
 		'DoorsFactory', 'XLummingFactory', 'MicroLummingFactory', 'IceFactory',
-		'PorteWithAuraFactory'],
+		'PorteWithAuraFactory', 'WaterFactory'],
 	   function(PlatformFactory, LummingFactory, VisibleLummingFactory, ColorEnum,
 				DoorsFactory, XLummingFactory, MicroLummingFactory, IceFactory,
-				 PorteWithAuraFactory) {
+				 PorteWithAuraFactory, WaterFactory) {
 
 	var _game = null;
 
@@ -20,10 +20,10 @@ define(['PlatformFactory', 'LummingFactory', 'VisibleLummingFactory', 'ColorEnum
 		this.groupDoors.enableBody = true;
 		this.groupDoorsRadioAura.enableBody = true;
 
-		this.nbLummingsWin = 1;
+		this.nbLummingsWin = 0;
 		this.tabAvailableObjects = [-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1];
 
-		switch (indexLevel) {
+		switch (indexLevel+1) {
 			case 1:
 				doorRadio1 = PorteWithAuraFactory.create(380,236, 200);
 				this.groupDoorsRadioAura.add(doorRadio1);
@@ -59,7 +59,7 @@ define(['PlatformFactory', 'LummingFactory', 'VisibleLummingFactory', 'ColorEnum
 
 				this.tabAvailableObjects = [1,2,3,4,5,6,7,8,9,10,11,12,13];
 
-				_game.add.text(0, 32, "car il ne sert de rien de dire qu'il est certain que l'on hasarde, et qu'il est incertain si l'on gagnera, et que l'infinie distance qui est entre la certitude de ce qu'on s'expose et l'incertitude de ce qu'on gagnera égale le bien fini, qu'on expose à l'infini, qui est incertain.", {wordWrap: true, wordWrapWidth: _game.world.width});
+				levelText("car il ne sert de rien de dire qu'il est certain que l'on hasarde, et qu'il est incertain si l'on gagnera, et que l'infinie distance qui est entre la certitude de ce qu'on s'expose et l'incertitude de ce qu'on gagnera égale le bien fini, qu'on expose à l'infini, qui est incertain.");
 
 				break;
 
@@ -71,16 +71,17 @@ define(['PlatformFactory', 'LummingFactory', 'VisibleLummingFactory', 'ColorEnum
 				this.groupDoors.add(door1);
 				this.groupDoors.add(door2);
 
-				lum1 = VisibleLummingFactory.create(ColorEnum.getColorEnum().RED, 150, 200, 50);
-				lum2 = VisibleLummingFactory.create(ColorEnum.getColorEnum().BLUE, 100, 200, 50);
+				lum1 = VisibleLummingFactory.create(ColorEnum.getColorEnum().RED, 250, 200, 50);
+				lum2 = VisibleLummingFactory.create(ColorEnum.getColorEnum().BLUE, 200, 200, 50);
 				this.groupLummings.add(lum1);
 				this.groupLummings.add(lum2);
 
 				this.nbLummingsWin = 2;
 
-				this.tabAvailableObjects = [1,2,3,4,5,6,7,8,9,10,11,12,13];
+				//this.tabAvailableObjects = [1,2,3,4,5,6,7,8,9,10,11,12,13];
+				this.tabAvailableObjects = [0,0,0,0,0,0,0,0,0,0,0,0,0];
 
-				_game.add.text(0, 32, "Le but du jeu est de faire passer les lummings de couleur par les portes de même couleur", {wordWrap: true, wordWrapWidth: _game.world.width});
+				levelText("Le but du jeu est de faire passer les lummings de couleur par les portes de même couleur");
 
 				break;
 
@@ -98,7 +99,7 @@ define(['PlatformFactory', 'LummingFactory', 'VisibleLummingFactory', 'ColorEnum
 				//un filtre soustractif magenta
 				this.tabAvailableObjects = [0,0,0,0,0,0,0,0,0,0,1,0,0];
 
-				_game.add.text(0, 32, "Utilisez les filtres à votre disposition pour changer la couleur des lummings. Les filtres soustractifs suppriment toute composante de couleur qui n'est pas celle indiquée sur le filtre.", {wordWrap: true, wordWrapWidth: _game.world.width});
+				levelText("Utilisez les filtres à votre disposition pour changer la couleur des lummings. Les filtres soustractifs suppriment toute composante de couleur autre que celle indiquée sur le filtre.");
 
 				break;
 
@@ -114,6 +115,8 @@ define(['PlatformFactory', 'LummingFactory', 'VisibleLummingFactory', 'ColorEnum
 				this.nbLummingsWin = 1;
 				//on donne les 3 filtres soustractifs
 				this.tabAvailableObjects = [0,0,0,0,0,0,0,0,0,0,1,1,1];
+
+				levelText("La soustraction n'est pas toujours aussi simple...");
 
 				break;
 
@@ -132,9 +135,26 @@ define(['PlatformFactory', 'LummingFactory', 'VisibleLummingFactory', 'ColorEnum
 				//on donne un filtre cyan
 				this.tabAvailableObjects = [0,0,0,0,0,0,0,0,0,0,0,1,0];
 
+				levelText("Si vous supprimez toutes ses couleurs à un lumming, il meurt. Mais regardez en haut à droite, vous n'avez pas forcément à tous les sauver...");
+
 				break;
 
 			case 6: //level 4
+				platform(this.groupPlatforms, 100, 300, 600);
+
+				door1 = DoorsFactory.create(ColorEnum.getColorEnum().MAGENTA, 500, 270);
+				this.groupDoors.add(door1);
+
+				lum1 = VisibleLummingFactory.create(ColorEnum.getColorEnum().RED, 150, 200, 50);
+				this.groupLummings.add(lum1);
+				this.nbLummingsWin = 1;
+				//on donne un filtre cyan
+				this.tabAvailableObjects = [0,0,0,0,0,0,0,0,0,1,0,0,0];
+				levelText("Les additifs, contrairement aux soustractifs, ajoutent la couleur du filtre au lumming");
+
+				break;
+
+			case 7: //level 5
 				platform(this.groupPlatforms, 100, 300, 600);
 
 				door1 = DoorsFactory.create(ColorEnum.getColorEnum().YELLOW, 500, 270);
@@ -148,53 +168,187 @@ define(['PlatformFactory', 'LummingFactory', 'VisibleLummingFactory', 'ColorEnum
 				this.nbLummingsWin = 2;
 				//on donne un filtre vert et un jaune
 				this.tabAvailableObjects = [0,0,0,0,0,0,0,0,1,0,0,0,1];
+		    levelText("Dans ce jeu, on vous demandera donc d'utiliser les filtres additifs et soustractifs habilement afin de sauver les lummings de couleur");
 
 				break;
 
-			case 7: //level 5
-				platform(this.groupPlatforms, 100, 300, 600);
-
-				door1 = DoorsFactory.create(ColorEnum.getColorEnum().MAGENTA, 500, 270);
-				this.groupDoors.add(door1);
-
-				lum1 = VisibleLummingFactory.create(ColorEnum.getColorEnum().RED, 150, 200, 50);
-				lum2 = VisibleLummingFactory.create(ColorEnum.getColorEnum().MAGENTA, 100, 200, 50);
-				this.groupLummings.add(lum1);
-				this.groupLummings.add(lum2);
-
-				this.nbLummingsWin = 2;
-				//on donne un filtre bleu
-				this.tabAvailableObjects = [0,0,0,0,0,0,0,0,0,1,0,0,0];
-
-				break;
-
-			case 8:
-				platform(this.groupPlatforms, 100, 300, 600);
+			case 8: //level 6
+				platform(this.groupPlatforms, 100, 300, 460);
 				platform(this.groupPlatforms, 0, 280, 110, true, true);
+				platform(this.groupPlatforms, 550, 280, 110, true, true);
 				
-				doorRadio1 = PorteWithAuraFactory.create(300, 240, 200);
+				doorRadio1 = PorteWithAuraFactory.create(300, 236, 150);
 				this.groupDoorsRadioAura.add(doorRadio1);
 
-				door1 = DoorsFactory.create(ColorEnum.getColorEnum().YELLOW, 500, 270);
+				door1 = DoorsFactory.create(ColorEnum.getColorEnum().YELLOW, 450, 270);
 				this.groupDoors.add(door1);
 
-				lum1 = VisibleLummingFactory.create(ColorEnum.getColorEnum().WHITE, 150, 200, 50);
+				lum1 = VisibleLummingFactory.create(ColorEnum.getColorEnum().YELLOW, 150, 200, 50);
+				lum2 = VisibleLummingFactory.create(ColorEnum.getColorEnum().YELLOW, 130, 200, 50);
+				lum3 = VisibleLummingFactory.create(ColorEnum.getColorEnum().YELLOW, 110, 200, 50);
 				this.groupLummings.add(lum1);
+				this.groupLummings.add(lum2);
+				this.groupLummings.add(lum3);
 
-				this.nbLummingsWin = 1;
-				//on donne un filtre jaune et une antenne
-				this.tabAvailableObjects = [0,0,0,0,0,1,0,0,0,0,0,0,1];
-				
+				this.nbLummingsWin = 3;
+				//on donne une antenne
+				this.tabAvailableObjects = [0,0,0,0,0,1,0,0,0,0,0,0,0];
+				levelText("En vous servant de la reglette en bas à gauche, vous changez de niveau de vision. Essayez l'antenne radio: elle génère un lumming \"radio\" qui est capable d'ouvrir les portes antennes");
+
 				break;
 			
 			case 9:
+				platform(this.groupPlatforms, 100, 300, 600);
+				
+				doorRadio1 = PorteWithAuraFactory.create(300, 236, 150);
+				doorRadio2 = PorteWithAuraFactory.create(500, 236, 150);
+				this.groupDoorsRadioAura.add(doorRadio1);
+				this.groupDoorsRadioAura.add(doorRadio2);
+				
+				door1 = DoorsFactory.create(ColorEnum.getColorEnum().CYAN, 120, 270);
+				this.groupDoors.add(door1);
+				
+				lum1 = VisibleLummingFactory.create(ColorEnum.getColorEnum().GREEN, 400, 200, 50);
+				this.groupLummings.add(lum1);
+				
+				this.nbLummingsWin = 1;
+				
+				// on donne les 3 filtres additifs et une antenne de chaque sens
+				this.tabAvailableObjects = [0,0,0,0,0,1,1,1,1,1,0,0,0];
 				
 				break;
 			
 			case 10:
+				platform(this.groupPlatforms, 80, 150, 100);
+				platform(this.groupPlatforms, 0, 300, 300);
+				waterPit(this, 300, 300, 64);
+				platform(this.groupPlatforms, 330, 200, 150);
+				
+				door1 = DoorsFactory.create(ColorEnum.getColorEnum().MAGENTA, 450, 170);
+				this.groupDoors.add(door1);
+				
+				lum1 = VisibleLummingFactory.create(ColorEnum.getColorEnum().RED, 60, 250, 50);
+				lum2 = VisibleLummingFactory.create(ColorEnum.getColorEnum().MAGENTA, 90, 250, 50);
+				lum3 = VisibleLummingFactory.create(ColorEnum.getColorEnum().BLUE, 120, 250, 50);
+				this.groupLummings.add(lum1);
+				this.groupLummings.add(lum2);
+				this.groupLummings.add(lum3);
+				lumM = MicroLummingFactory.create(100, 100, 60);
+				this.groupLummings.add(lumM);
+				
+				this.nbLummingsWin = 3;
+
+				// on donne les filtres additifs				
+				this.tabAvailableObjects = [0,0,0,0,0,0,0,1,1,1,0,0,0];
+		    levelText("Les lummings \"micro-onde\" génèrent de la vapeur au dessus de l'eau. Cela peut etre utile...");
+				
+				break;
+			
+			case 11:
+				platform(this.groupPlatforms, 100, 300, 400);
+				platform(this.groupPlatforms, 540, 210, 100, false);
+				icePit(this, 500, 300, 64);
+
+				door1 = DoorsFactory.create(ColorEnum.getColorEnum().RED, 620, 180);
+				this.groupDoors.add(door1);
+
+				lum1 = VisibleLummingFactory.create(ColorEnum.getColorEnum().RED, 120, 200, 50);
+				lum2 = VisibleLummingFactory.create(ColorEnum.getColorEnum().BLUE, 100, 200, 50);
+				this.groupLummings.add(lum1);
+				this.groupLummings.add(lum2);
+
+				lumX = XLummingFactory.create(250, 200, 70);
+				this.groupLummings.add(lumX);
+				lumM = MicroLummingFactory.create(200, 200, 50);
+				this.groupLummings.add(lumM);
+
+				this.nbLummingsWin = 2;
+
+				this.tabAvailableObjects = [0,0,0,0,0,0,0,1,1,1,1,1,1];
+		    levelText("Les lummings \"X\" font fondre la glace, révélant de l'eau. Vous savez ce qu'il vous reste à faire...");
+				break;
+			
+			case 12:
+				platform(this.groupPlatforms, 100, 300, 600, true, true);
+				platform(this.groupPlatforms, 50, 150, 200, true, true);
+				
+				door1 = DoorsFactory.create(ColorEnum.getColorEnum().MAGENTA, 620, 270);
+				this.groupDoors.add(door1);
+
+				lum1 = VisibleLummingFactory.create(ColorEnum.getColorEnum().WHITE, 120, 100, 50);
+				lum2 = VisibleLummingFactory.create(ColorEnum.getColorEnum().WHITE, 140, 100, 50);
+				lum3 = VisibleLummingFactory.create(ColorEnum.getColorEnum().WHITE, 160, 100, 50);
+				lum4 = VisibleLummingFactory.create(ColorEnum.getColorEnum().BLUE, 150, 250, 50);
+				lum5 = VisibleLummingFactory.create(ColorEnum.getColorEnum().BLUE, 170, 250, 50);
+				lum6 = VisibleLummingFactory.create(ColorEnum.getColorEnum().BLUE, 190, 250, 50);
+				this.groupLummings.add(lum1);
+				this.groupLummings.add(lum2);
+				this.groupLummings.add(lum3);
+				this.groupLummings.add(lum4);
+				this.groupLummings.add(lum5);
+				this.groupLummings.add(lum6);
+
+				lumX = XLummingFactory.create(80, 100, 60);
+				this.groupLummings.add(lumX);
+				
+				this.nbLummingsWin = 4;
+				
+				// tous les filtres
+				this.tabAvailableObjects = [0,0,0,0,0,0,0,1,1,1,1,1,1];
+		    levelText("Mais les lummings \"X\" sont nocifs pour les autres lummings. Protégez les !");
+
+				break;
+			
+			case 13:
+				platform(this.groupPlatforms, 300, 100, 250, true, true);
+				platform(this.groupPlatforms, 100, 200, 170, true, true);
+				platform(this.groupPlatforms, 350, 200, 260, true, true);
+				platform(this.groupPlatforms, 100, 300, 150, true, true);
+				icePit(this, 250, 300, 64);
+				platform(this.groupPlatforms, 314, 300, 400, true, true);
+				platform(this.groupPlatforms, 700, 270, 64, true, true);
+				
+				door1 = DoorsFactory.create(ColorEnum.getColorEnum().CYAN, 130, 170);
+				this.groupDoors.add(door1);
+
+				lum1 = VisibleLummingFactory.create(ColorEnum.getColorEnum().GREEN, 450, 150, 50);
+				lum2 = VisibleLummingFactory.create(ColorEnum.getColorEnum().GREEN, 470, 150, 50);
+				this.groupLummings.add(lum1);
+				this.groupLummings.add(lum2);
+				lumM = MicroLummingFactory.create(450, 250, 60);
+				this.groupLummings.add(lumM);
+				lumX = XLummingFactory.create(350, 50, 60);
+				this.groupLummings.add(lumX);
+				
+				this.nbLummingsWin = 2;
+				
+				// tous les filtres et un miroir
+				this.tabAvailableObjects = [0,0,0,0,1,0,0,1,1,1,1,1,1];
 				
 				break;
 				
+			case 14:
+				platform(this.groupPlatforms, 100, 200, 250, true, true);
+				platform(this.groupPlatforms, 450, 200, 300, true, true);
+				
+				door1 = DoorsFactory.create(ColorEnum.getColorEnum().CYAN, 150, 170);
+				this.groupDoors.add(door1);
+
+				lum1 = VisibleLummingFactory.create(ColorEnum.getColorEnum().RED, 460, 150, 50);
+				lum2 = VisibleLummingFactory.create(ColorEnum.getColorEnum().RED, 485, 150, 50);
+				lum3 = VisibleLummingFactory.create(ColorEnum.getColorEnum().RED, 510, 150, 50);
+				this.groupLummings.add(lum1);
+				this.groupLummings.add(lum2);
+				this.groupLummings.add(lum3);
+				
+				this.nbLummingsWin = 3;
+				
+				// tous les filtres et des miroirs
+				this.tabAvailableObjects = [0,0,0,2,1,0,0,1,1,1,1,1,1];
+		    levelText("Les miroirs reflètent très bien la lumière, pratique pour traverser du vide");
+				
+				break;
+			
 			default:
 				break;
 		}
@@ -213,6 +367,12 @@ define(['PlatformFactory', 'LummingFactory', 'VisibleLummingFactory', 'ColorEnum
 		);
 	}
 
+	function levelText(text, x, y) {
+		if (x == null) x=0;
+		if (y == null) y=32;
+		_game.add.text(x, y, text, {wordWrap: true, wordWrapWidth: _game.world.width, fill: '#ffffff', stroke: '#000000', strokeThickness: 2});
+	}
+
 	icePit = function(ls, x, y, w) { //ls is LevelStructure
 		var ice;
 		ls.groupElements.add(ice = IceFactory.create(x, y));
@@ -220,7 +380,7 @@ define(['PlatformFactory', 'LummingFactory', 'VisibleLummingFactory', 'ColorEnum
 		pit(ls, x, y, w);
 	}
 
-	waterPit = function(x, y) {
+	waterPit = function(ls, x, y, w) {
 		var water;
 		ls.groupElements.add(water = WaterFactory.create(x, y));
 		water.width = w;

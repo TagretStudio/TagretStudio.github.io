@@ -43,8 +43,11 @@ define(['LummingFactory', 'ColorEnum', 'VisionEnum', 'DoorsFactory', 'FilterFact
         if (temp != this.color) {
             if (value == 0) {
                this.body.velocity.x = 0;
+		this.body.velocity.y = -100;
+		this.body.gravity.y = -100;
                this.animations.play('kill');
-               this.kill();
+		this.color = null;
+               //this.kill();
             } else {
                 LummingFactory.Lumming.prototype.updateColor.call(this, 'lumming_' + ColorEnum.getName(this.color));
             }
