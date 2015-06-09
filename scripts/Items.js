@@ -1,1 +1,0 @@
-define(function(){var t,e=function(e,r,i){Phaser.Sprite.call(this,t,r,i,e,[1]),t.physics.arcade.enable(this),this.body.immovable=!0};return e.prototype=Object.create(Phaser.Sprite.prototype),e.prototype.constructor=e,{init:function(e){t=e},Item:e}});
